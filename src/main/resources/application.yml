@@ -1,0 +1,22 @@
+server:
+  port: 7100
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
+
+# logging config
+logging:
+  file:
+    name: ${user.dir}/log/cloud-interface-aks.log
+    max-history: 30
+    max-size: 10MB
+    
+  level:
+    '[kr.co.strato.cloud.aks]': debug
+  pattern:
+    file: "[%d{HH:mm:ss.SSS}][%-5level][%logger.%method:line%line] - %msg%n"
+  logback:
+    rollingpolicy:
+      file-name-pattern: ${user.dir}/log/cloud-interface-aks.%d{yyyy-MM-dd}.%i
