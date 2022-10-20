@@ -31,6 +31,22 @@ dependencies {
 	// https://mvnrepository.com/artifact/com.azure/azure-storage-blob
 	implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.17.1'
 
+	// https://mvnrepository.com/artifact/com.jcraft/jsch
+	implementation group: 'com.jcraft', name: 'jsch', version: '0.1.55'
+	
+	// https://mvnrepository.com/artifact/commons-net/commons-net
+	implementation group: 'commons-net', name: 'commons-net', version: '3.6'
+	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+	// https://mvnrepository.com/artifact/com.google.code.gson/gson
+	implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
+	// https://mvnrepository.com/artifact/commons-codec/commons-codec
+	implementation group: 'commons-codec', name: 'commons-codec', version: '1.15'
+
+	implementation 'org.springframework.kafka:spring-kafka'
+
+	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
+	implementation group: 'org.apache.kafka', name: 'kafka-clients', version: '3.1.1'
 	annotationProcessor "org.projectlombok:lombok:1.18.12"
 	
 }
