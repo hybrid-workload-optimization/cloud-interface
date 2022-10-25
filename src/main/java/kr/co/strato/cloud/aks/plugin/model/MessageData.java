@@ -1,12 +1,9 @@
 package kr.co.strato.cloud.aks.plugin.model;
 
-import java.util.Map;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-import kr.co.strato.cloud.eks.model.CloudAuthArg;
 import lombok.Data;
 
 @Data
