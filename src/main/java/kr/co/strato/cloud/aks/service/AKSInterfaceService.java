@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.azure.core.exception.AzureException;
 import com.azure.core.util.Context;
 import com.azure.resourcemanager.AzureResourceManager;
+import com.azure.resourcemanager.containerservice.fluent.models.ManagedClusterInner;
 
 import kr.co.strato.cloud.aks.exception.BusinessException;
 import kr.co.strato.cloud.aks.exception.ErrorCode;
@@ -27,13 +28,20 @@ public class AKSInterfaceService {
 		
 		log.debug("[provisioningCluster] start");
 		
-		String clusterName = arg.getClusterName();
+		String clientId = "";
+		String clientSecret = "";
+		String tenantId = "";
+		String subscriptionId = "";
 		
 		AzureResourceManager azureResourceManager = azureCredential.getAzureAuth(clientId, clientSecret, tenantId, subscriptionId);
 		
 		log.debug("[provisioningCluster] >>> request cluster create");
 
-		// 3. 생성 요청
+
+		String clusterName = arg.getClusterName();
+		String rgName = "";
+		ManagedClusterInner clusterInner = new ManagedClusterInner();
+		
 		try {
 			azureResourceManager
 						.kubernetesClusters()
