@@ -25,7 +25,9 @@ public class ProfileSetting {
 		
 		String dnsPrefix = "testDns";
 		
-		return null;
+		ContainerServiceNetworkProfile networkProfile = new ContainerServiceNetworkProfile();
+		
+		return networkProfile;
 	}
 	
 	public ManagedClusterInner clusterInnerSet(CreateArg arg) {
@@ -38,6 +40,8 @@ public class ProfileSetting {
 		List<ManagedClusterAgentPoolProfile> agentPools = agentPoolProfileSet(arg);
 		ContainerServiceNetworkProfile network = networkProfileSet();
 		
-		return null;
+		ManagedClusterInner clusterInner = new ManagedClusterInner();
+		
+		return clusterInner;
 	}
 }
