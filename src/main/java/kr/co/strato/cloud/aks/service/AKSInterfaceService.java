@@ -65,6 +65,36 @@ public class AKSInterfaceService {
 	
 	public boolean scaleCluster(CloudParamDto.ScaleArg arg) {
 		
+		log.debug("[scaleCluster] start");
+		
+		String clientId = "";
+		String clientSecret = "";
+		String tenantId = "";
+		String subscriptionId = "";
+		
+		AzureResourceManager azureResourceManager = azureCredential.getAzureAuth(clientId, clientSecret, tenantId, subscriptionId);
+		
+		
+		log.debug("[scaleCluster] >>> request cluster create");
+
+
+		String clusterName = arg.getClusterName();
+		String rgName = "";
+		ManagedClusterInner clusterInner = new ManagedClusterInner();
+		
+		try {
+			azureResourceManager
+						.kubernetesClusters()
+						.manager()
+						.serviceClient()
+						.getManagedClusters()
+						.update(rgName, clusterName, clusterInner, Context.NONE);
+			
+		} catch (AzureException e) {
+			log.error("[scaleCluster] >>> Faild cluster create", e);
+			throw new BusinessException(ErrorCode.CLUSTER_CREATE_FAILED);
+		}
+		
 		return false;
 	}
 	
