@@ -20,3 +20,13 @@ logging:
   logback:
     rollingpolicy:
       file-name-pattern: ${user.dir}/log/cloud-interface-aks.%d{yyyy-MM-dd}.%i
+
+      
+# Azure Cloud Config
+azure:
+  auth:
+    subscriptionId: aaaa
+    clientId: bbbb
+    clientSecret: cccc
+    tenantId: dddd
+    rgName: eeee
