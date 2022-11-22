@@ -3,6 +3,7 @@ package kr.co.strato.cloud.aks.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.azure.core.exception.AzureException;
@@ -24,14 +25,24 @@ public class AKSInterfaceService {
 	@Autowired
 	private AzureCredential azureCredential;
 	
+	@Value("${azure.auth.subscriptionId}")
+	private String subscriptionId;
+	
+	@Value("${azure.auth.clientId}")
+	private String clientId;
+	
+	@Value("${azure.auth.clientSecret}")
+	private String clientSecret;
+	
+	@Value("${azure.auth.tenantId}")
+	private String tenantId;
+	
+	@Value("${azure.auth.rgName}")
+	private String rgName;
+	
 	public String provisioningCluster(CreateArg arg) {
 		
 		log.debug("[provisioningCluster] start");
-		
-		String clientId = "";
-		String clientSecret = "";
-		String tenantId = "";
-		String subscriptionId = "";
 		
 		AzureResourceManager azureResourceManager = azureCredential.getAzureAuth(clientId, clientSecret, tenantId, subscriptionId);
 		
@@ -39,7 +50,6 @@ public class AKSInterfaceService {
 
 
 		String clusterName = arg.getClusterName();
-		String rgName = "";
 		ManagedClusterInner clusterInner = new ManagedClusterInner();
 		
 		try {
@@ -67,11 +77,6 @@ public class AKSInterfaceService {
 		
 		log.debug("[scaleCluster] start");
 		
-		String clientId = "";
-		String clientSecret = "";
-		String tenantId = "";
-		String subscriptionId = "";
-		
 		AzureResourceManager azureResourceManager = azureCredential.getAzureAuth(clientId, clientSecret, tenantId, subscriptionId);
 		
 		
@@ -79,7 +84,6 @@ public class AKSInterfaceService {
 
 
 		String clusterName = arg.getClusterName();
-		String rgName = "";
 		ManagedClusterInner clusterInner = new ManagedClusterInner();
 		
 		try {
