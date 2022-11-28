@@ -10,6 +10,7 @@ import com.azure.core.exception.AzureException;
 import com.azure.core.util.Context;
 import com.azure.resourcemanager.AzureResourceManager;
 import com.azure.resourcemanager.containerservice.fluent.models.ManagedClusterInner;
+import com.azure.resourcemanager.containerservice.models.CredentialResult;
 
 import kr.co.strato.cloud.aks.exception.BusinessException;
 import kr.co.strato.cloud.aks.exception.ErrorCode;
@@ -48,7 +49,6 @@ public class AKSInterfaceService {
 		
 		log.debug("[provisioningCluster] >>> request cluster create");
 
-
 		String clusterName = arg.getClusterName();
 		ManagedClusterInner clusterInner = new ManagedClusterInner();
 		
@@ -65,7 +65,13 @@ public class AKSInterfaceService {
 			throw new BusinessException(ErrorCode.CLUSTER_CREATE_FAILED);
 		}
 		
-		return null;
+		List<CredentialResult> listKubeConfig = azureResourceManager
+														.kubernetesClusters()
+														.listAdminKubeConfigContent(rgName, clusterName);
+
+		String kubeconfig = listKubeConfig.get(0).toString();
+		
+		return kubeconfig;
 	}
 	
 	public List<GetList> getListCluster() {
