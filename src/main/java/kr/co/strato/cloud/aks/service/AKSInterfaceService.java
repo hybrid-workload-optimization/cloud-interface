@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.azure.core.exception.AzureException;
+import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.util.Context;
 import com.azure.resourcemanager.AzureResourceManager;
 import com.azure.resourcemanager.containerservice.fluent.models.ManagedClusterInner;
@@ -74,7 +75,25 @@ public class AKSInterfaceService {
 		return kubeconfig;
 	}
 	
-	public List<GetList> getListCluster() {
+	public String getListCluster() {
+		
+		log.debug("[getListCluster] start");
+		
+		AzureResourceManager azureResourceManager = azureCredential.getAzureAuth(clientId, clientSecret, tenantId, subscriptionId);
+
+		PagedIterable<ManagedClusterInner> getList = null;
+		
+		try {		
+			getList = azureResourceManager
+					        .kubernetesClusters()
+					        .manager()
+					        .serviceClient()
+					        .getManagedClusters()
+					        .listByResourceGroup(rgName, Context.NONE);
+		} catch(Exception e) {
+			log.error("[getListCluster] >>> Faild get cluster list", e);
+			throw new BusinessException(ErrorCode.CLUSTER_LIST_GET_FAILED);
+		}
 		
 		return null;
 	}
