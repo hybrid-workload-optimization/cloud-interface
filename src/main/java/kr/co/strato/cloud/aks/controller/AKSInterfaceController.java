@@ -46,11 +46,11 @@ public class AKSInterfaceController {
 	}
 	
 	@GetMapping("/api/v1/cloud/aks/list")
-	public List<GetList> getListCluster() {
+	public String getListCluster() {
 	
 		log.debug("[getListCluster] param is null");
 		
-		List<GetList> result = interfaceService.getListCluster();
+		String result = interfaceService.getListCluster();
 	
 		log.debug("[getListCluster] return = {}", result.toString());
 		

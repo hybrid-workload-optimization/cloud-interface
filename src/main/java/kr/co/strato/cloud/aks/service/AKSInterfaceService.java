@@ -12,6 +12,7 @@ import com.azure.core.util.Context;
 import com.azure.resourcemanager.AzureResourceManager;
 import com.azure.resourcemanager.containerservice.fluent.models.ManagedClusterInner;
 import com.azure.resourcemanager.containerservice.models.CredentialResult;
+import com.google.gson.Gson;
 
 import kr.co.strato.cloud.aks.exception.BusinessException;
 import kr.co.strato.cloud.aks.exception.ErrorCode;
@@ -95,7 +96,11 @@ public class AKSInterfaceService {
 			throw new BusinessException(ErrorCode.CLUSTER_LIST_GET_FAILED);
 		}
 		
-		return null;
+		Gson gson = new Gson();
+		
+		String list = gson.toJson(getList);
+		
+		return list;
 	}
 	
 	public boolean scaleCluster(CloudParamDto.ScaleArg arg) {
