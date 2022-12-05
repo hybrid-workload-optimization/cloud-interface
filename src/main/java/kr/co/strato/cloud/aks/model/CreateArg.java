@@ -22,9 +22,6 @@ public class CreateArg {
 	@NotEmpty(message = "지역은 null 또는 공백을 허용하지 않습니다.")
 	private String region;
 	
-	//DNS 접두사 이름
-	private String dnsPrefix;
-	
 	private List<NodePools> nodePools;
 	
 	@Data
