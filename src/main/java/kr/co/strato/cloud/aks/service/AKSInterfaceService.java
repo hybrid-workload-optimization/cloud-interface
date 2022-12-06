@@ -52,7 +52,14 @@ public class AKSInterfaceService {
 		log.debug("[provisioningCluster] >>> request cluster create");
 
 		String clusterName = arg.getClusterName();
+		String version = arg.getKubernetesVersion(); 
+		String region = arg.getRegion();
+		String nodePoolName = arg.getNodePoolName();
+		String vmType = arg.getVmType();
+		Integer nodeCount = arg.getNodeCount();
+		
 		ManagedClusterInner clusterInner = new ManagedClusterInner();
+		clusterInner.withKubernetesVersion(version);
 		
 		try {
 			azureResourceManager
