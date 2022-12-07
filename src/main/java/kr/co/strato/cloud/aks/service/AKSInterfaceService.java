@@ -1,5 +1,6 @@
 package kr.co.strato.cloud.aks.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,9 @@ import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.util.Context;
 import com.azure.resourcemanager.AzureResourceManager;
 import com.azure.resourcemanager.containerservice.fluent.models.ManagedClusterInner;
+import com.azure.resourcemanager.containerservice.models.AgentPoolType;
 import com.azure.resourcemanager.containerservice.models.CredentialResult;
+import com.azure.resourcemanager.containerservice.models.ManagedClusterAgentPoolProfile;
 import com.google.gson.Gson;
 
 import kr.co.strato.cloud.aks.exception.BusinessException;
@@ -59,7 +62,14 @@ public class AKSInterfaceService {
 		Integer nodeCount = arg.getNodeCount();
 		
 		ManagedClusterInner clusterInner = new ManagedClusterInner();
+		ManagedClusterAgentPoolProfile agentPoolProfile = new ManagedClusterAgentPoolProfile();
 		clusterInner.withKubernetesVersion(version);
+		agentPoolProfile.withCount(nodeCount);
+		agentPoolProfile.withName(nodePoolName);
+		agentPoolProfile.withVmSize(vmType);
+		List<ManagedClusterAgentPoolProfile> agentPoolProfiles = new ArrayList<>();
+		agentPoolProfiles.add(agentPoolProfile);
+		clusterInner.withAgentPoolProfiles(agentPoolProfiles);
 		
 		try {
 			azureResourceManager
