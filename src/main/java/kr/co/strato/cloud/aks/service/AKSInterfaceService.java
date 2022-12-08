@@ -11,7 +11,9 @@ import com.azure.core.exception.AzureException;
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.util.Context;
 import com.azure.resourcemanager.AzureResourceManager;
+import com.azure.resourcemanager.containerservice.fluent.models.AgentPoolInner;
 import com.azure.resourcemanager.containerservice.fluent.models.ManagedClusterInner;
+import com.azure.resourcemanager.containerservice.models.AgentPoolMode;
 import com.azure.resourcemanager.containerservice.models.AgentPoolType;
 import com.azure.resourcemanager.containerservice.models.CredentialResult;
 import com.azure.resourcemanager.containerservice.models.ManagedClusterAgentPoolProfile;
@@ -126,27 +128,34 @@ public class AKSInterfaceService {
 		
 		AzureResourceManager azureResourceManager = azureCredential.getAzureAuth(clientId, clientSecret, tenantId, subscriptionId);
 		
-		
 		log.debug("[scaleCluster] >>> request cluster create");
 
 
 		String clusterName = arg.getClusterName();
-		ManagedClusterInner clusterInner = new ManagedClusterInner();
+		String nodePoolName = arg.getNodePoolName();
+		Integer nodeCount = arg.getNodeCount();
 		
 		try {
 			azureResourceManager
 						.kubernetesClusters()
-						.manager()
-						.serviceClient()
-						.getManagedClusters()
-						.update(rgName, clusterName, clusterInner, Context.NONE);
+				        .manager()
+				        .serviceClient()
+				        .getAgentPools()
+				        .createOrUpdate(
+				            rgName
+				            , clusterName
+				            , nodePoolName
+				            , new AgentPoolInner()
+				                .withCount(nodeCount)
+				                .withMode(AgentPoolMode.SYSTEM)
+				            , Context.NONE);
 			
-		} catch (AzureException e) {
-			log.error("[scaleCluster] >>> Faild cluster create", e);
-			throw new BusinessException(ErrorCode.CLUSTER_CREATE_FAILED);
+			return true;
+		} catch(Exception e) {
+			log.error("[scaleCluster] >>> Faild cluster scale", e);
+			throw new BusinessException(ErrorCode.CLUSTER_SCALE_FAILED);
 		}
 		
-		return false;
 	}
 	
 	public boolean modifyCluster(CloudParamDto.ModifyArg arg) {

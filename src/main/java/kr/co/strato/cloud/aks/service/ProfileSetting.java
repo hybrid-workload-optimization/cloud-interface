@@ -7,8 +7,8 @@ import com.azure.resourcemanager.containerservice.fluent.models.ManagedClusterIn
 import com.azure.resourcemanager.containerservice.models.ContainerServiceNetworkProfile;
 import com.azure.resourcemanager.containerservice.models.ManagedClusterAgentPoolProfile;
 
+import kr.co.strato.cloud.aks.model.CloudResponseDto.GetList.NodePools;
 import kr.co.strato.cloud.aks.model.CreateArg;
-import kr.co.strato.cloud.aks.model.CreateArg.NodePools;
 
 public class ProfileSetting {
 
@@ -30,18 +30,4 @@ public class ProfileSetting {
 		return networkProfile;
 	}
 	
-	public ManagedClusterInner clusterInnerSet(CreateArg arg) {
-	
-		String clusterName = arg.getClusterName();
-		String kubernetesVersion = arg.getKubernetesVersion();
-		String region = arg.getRegion();
-		List<NodePools> nodePools = arg.getNodePools();
-		
-		List<ManagedClusterAgentPoolProfile> agentPools = agentPoolProfileSet(arg);
-		ContainerServiceNetworkProfile network = networkProfileSet();
-		
-		ManagedClusterInner clusterInner = new ManagedClusterInner();
-		
-		return clusterInner;
-	}
 }
