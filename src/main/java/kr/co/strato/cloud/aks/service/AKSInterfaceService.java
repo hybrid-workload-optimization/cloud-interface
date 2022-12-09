@@ -14,7 +14,6 @@ import com.azure.resourcemanager.AzureResourceManager;
 import com.azure.resourcemanager.containerservice.fluent.models.AgentPoolInner;
 import com.azure.resourcemanager.containerservice.fluent.models.ManagedClusterInner;
 import com.azure.resourcemanager.containerservice.models.AgentPoolMode;
-import com.azure.resourcemanager.containerservice.models.AgentPoolType;
 import com.azure.resourcemanager.containerservice.models.CredentialResult;
 import com.azure.resourcemanager.containerservice.models.ManagedClusterAgentPoolProfile;
 import com.google.gson.Gson;
@@ -22,7 +21,6 @@ import com.google.gson.Gson;
 import kr.co.strato.cloud.aks.exception.BusinessException;
 import kr.co.strato.cloud.aks.exception.ErrorCode;
 import kr.co.strato.cloud.aks.model.CloudParamDto;
-import kr.co.strato.cloud.aks.model.CloudResponseDto.GetList;
 import kr.co.strato.cloud.aks.model.CreateArg;
 import lombok.extern.slf4j.Slf4j;
 
@@ -160,8 +158,40 @@ public class AKSInterfaceService {
 	
 	public boolean modifyCluster(CloudParamDto.ModifyArg arg) {
 		
-		return false;
+		log.debug("[modifyCluster] start");
+		
+		AzureResourceManager azureResourceManager = azureCredential.getAzureAuth(clientId, clientSecret, tenantId, subscriptionId);
+		
+		log.debug("[modifyCluster] >>> request cluster modify");
+
+
+		String clusterName = arg.getClusterName();
+		String nodePoolName = arg.getNodePoolName();
+		Integer nodeCount = arg.getNodeCount();
+		
+//		try {
+//			azureResourceManager
+//						.kubernetesClusters()
+//				        .manager()
+//				        .serviceClient()
+//				        .getAgentPools()
+//				        .createOrUpdate(
+//				            rgName
+//				            , clusterName
+//				            , nodePoolName
+//				            , new AgentPoolInner()
+//				                .withCount(nodeCount)
+//				                .withMode(AgentPoolMode.SYSTEM)
+//				            , Context.NONE);
+//			
+//			return true;
+//		} catch(Exception e) {
+//			log.error("[modifyCluster] >>> Faild cluster modify", e);
+//			throw new BusinessException(ErrorCode.CLUSTER_SCALE_FAILED);
+//		}
+		
 	}
+	
 	
 	public boolean deleteCluster(CloudParamDto.DeleteArg arg) {
 	
