@@ -168,27 +168,48 @@ public class AKSInterfaceService {
 		String clusterName = arg.getClusterName();
 		String nodePoolName = arg.getNodePoolName();
 		Integer nodeCount = arg.getNodeCount();
+		String vmType =arg.getVmType();
 		
-//		try {
-//			azureResourceManager
-//						.kubernetesClusters()
-//				        .manager()
-//				        .serviceClient()
-//				        .getAgentPools()
-//				        .createOrUpdate(
-//				            rgName
-//				            , clusterName
-//				            , nodePoolName
-//				            , new AgentPoolInner()
-//				                .withCount(nodeCount)
-//				                .withMode(AgentPoolMode.SYSTEM)
-//				            , Context.NONE);
-//			
-//			return true;
-//		} catch(Exception e) {
-//			log.error("[modifyCluster] >>> Faild cluster modify", e);
-//			throw new BusinessException(ErrorCode.CLUSTER_SCALE_FAILED);
-//		}
+		AgentPoolInner nodePoolInfo = new AgentPoolInner()
+				.withCount(nodeCount)
+				.withVmSize(vmType)
+				;
+		
+		try {
+			azureResourceManager
+		        .kubernetesClusters()
+		        .manager()
+		        .serviceClient()
+		        .getAgentPools()
+		        .createOrUpdate(
+		            rgName
+		            , clusterName
+		            , nodePoolName+"m"
+		            , nodePoolInfo
+		            , Context.NONE);
+		} catch(Exception e) {
+			log.error("[modifyCluster] >>> Faild nodePool modify", e);
+			throw new BusinessException(ErrorCode.CLUSTER_MODIFY_CREATE_FAILED);
+		}
+
+		try {
+		azureResourceManager
+		        .kubernetesClusters()
+		        .manager()
+		        .serviceClient()
+		        .getAgentPools()
+		        .delete(rgName
+		        		, clusterName
+		        		, nodePoolName
+		        		, Context.NONE);
+		} catch(Exception e) {
+			log.error("[modifyCluster] >>> Faild nodePool delete", e);
+			throw new BusinessException(ErrorCode.CLUSTER_MODIFY_DELETE_FAILED);
+		}
+
+		log.debug("[modifyCluster] >>> result = true");
+		
+		return true;
 		
 	}
 	
