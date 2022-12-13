@@ -215,8 +215,28 @@ public class AKSInterfaceService {
 	
 	
 	public boolean deleteCluster(CloudParamDto.DeleteArg arg) {
-	
-		return false;
+		
+		AzureResourceManager azureResourceManager = azureCredential.getAzureAuth(clientId, clientSecret, tenantId, subscriptionId);
+		
+		String clusterName = arg.getClusterName();
+		
+		log.debug("[deleteCluster] >>> request cluster delete");
+		
+		try {
+			azureResourceManager
+						.kubernetesClusters()
+						.manager()
+						.serviceClient()
+						.getManagedClusters()
+						.delete(rgName,clusterName, Context.NONE);
+		} catch (AzureException e) {
+			log.error("[deleteCluster] >>> Faild cluster delete", e);
+			throw new BusinessException(ErrorCode.CLUSTER_DELETE_FAILED);
+		}
+
+		log.debug("[deleteCluster] >>> result = true");
+		
+	 	return true;
 	}
 	
 	public boolean duplicateCheckCluster(CloudParamDto.DuplicateArg arg) {
@@ -224,4 +244,5 @@ public class AKSInterfaceService {
 		return false;
 	}
 
+	
 }
