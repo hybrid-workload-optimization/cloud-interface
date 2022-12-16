@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.azure.core.exception.AzureException;
 import com.azure.core.http.rest.PagedIterable;
+import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import com.azure.resourcemanager.AzureResourceManager;
 import com.azure.resourcemanager.containerservice.fluent.models.AgentPoolInner;
@@ -177,31 +178,31 @@ public class AKSInterfaceService {
 		
 		try {
 			azureResourceManager
-		        .kubernetesClusters()
-		        .manager()
-		        .serviceClient()
-		        .getAgentPools()
-		        .createOrUpdate(
-		            rgName
-		            , clusterName
-		            , nodePoolName+"m"
-		            , nodePoolInfo
-		            , Context.NONE);
+			        .kubernetesClusters()
+			        .manager()
+			        .serviceClient()
+			        .getAgentPools()
+			        .createOrUpdate(
+			            rgName
+			            , clusterName
+			            , nodePoolName+"m"
+			            , nodePoolInfo
+			            , Context.NONE);
 		} catch(Exception e) {
 			log.error("[modifyCluster] >>> Faild nodePool modify", e);
 			throw new BusinessException(ErrorCode.CLUSTER_MODIFY_CREATE_FAILED);
 		}
 
 		try {
-		azureResourceManager
-		        .kubernetesClusters()
-		        .manager()
-		        .serviceClient()
-		        .getAgentPools()
-		        .delete(rgName
-		        		, clusterName
-		        		, nodePoolName
-		        		, Context.NONE);
+			azureResourceManager
+			        .kubernetesClusters()
+			        .manager()
+			        .serviceClient()
+			        .getAgentPools()
+			        .delete(rgName
+			        		, clusterName
+			        		, nodePoolName
+			        		, Context.NONE);
 		} catch(Exception e) {
 			log.error("[modifyCluster] >>> Faild nodePool delete", e);
 			throw new BusinessException(ErrorCode.CLUSTER_MODIFY_DELETE_FAILED);
@@ -240,6 +241,35 @@ public class AKSInterfaceService {
 	}
 	
 	public boolean duplicateCheckCluster(CloudParamDto.DuplicateArg arg) {
+		
+		log.debug("[duplicateCheckCluster] start");
+		
+		String clusterName = arg.getClusterName();
+		
+		AzureResourceManager azureResourceManager = azureCredential.getAzureAuth(clientId, clientSecret, tenantId, subscriptionId);
+		
+		Response<ManagedClusterInner> response = null;
+		
+		try {
+			response = azureResourceManager
+							.kubernetesClusters()
+							.manager()
+							.serviceClient()
+							.getManagedClusters()
+							.getByResourceGroupWithResponse(rgName, clusterName, Context.NONE);
+		
+			// 클러스터 이름 중복
+			if(response.getStatusCode()==200) {
+				log.debug("[duplicateCheckCluster] >>> result = false");
+				return false;
+			}
+		} catch (Exception e) {
+			// 클러스터 중복 아님
+			if(response == null || response.getStatusCode()==404) {
+				log.debug("[duplicateCheckCluster] >>> result = true");
+				return true;
+			}
+		}
 		
 		return false;
 	}
