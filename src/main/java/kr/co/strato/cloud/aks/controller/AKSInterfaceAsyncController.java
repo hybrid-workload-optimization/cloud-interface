@@ -12,6 +12,7 @@ import kr.co.strato.cloud.aks.plugin.model.CreateMessageData;
 import kr.co.strato.cloud.aks.plugin.model.DeleteMessageData;
 import kr.co.strato.cloud.aks.plugin.model.ModifyMessageData;
 import kr.co.strato.cloud.aks.plugin.model.ScaleMessageData;
+import kr.co.strato.cloud.aks.service.AKSInterfaceAsyncService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
